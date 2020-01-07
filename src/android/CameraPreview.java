@@ -241,7 +241,7 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
   private boolean startCamera(int x, int y, int width, int height, String defaultCamera, Boolean tapToTakePicture, Boolean dragEnabled, final Boolean toBack, String alpha, boolean tapFocus, boolean disableExifHeaderStripping, boolean storeToFile, CallbackContext callbackContext) {
     Log.d(TAG, "start camera action");
     
-    Toast.makeText(getActivity(), "This is modified", Toast.LENGTH_SHORT).show();
+    Toast.makeText(cordova.getActivity(), "This is modified", Toast.LENGTH_SHORT).show();
     return true;
   }
 
