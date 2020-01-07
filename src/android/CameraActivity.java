@@ -106,7 +106,7 @@ public class CameraActivity extends Fragment {
     appResourcesPackage = getActivity().getPackageName();
 
     // Inflate the layout for this fragment
-    Toast.makeText(cordova.getActivity(), "onCreateView", Toast.LENGTH_SHORT).show();
+    Toast.makeText(getActivity(), "onCreateView", Toast.LENGTH_SHORT).show();
     view = inflater.inflate(getResources().getIdentifier("camera_activity", "layout", appResourcesPackage), container, false);
     createCameraPreview();
     return view;
