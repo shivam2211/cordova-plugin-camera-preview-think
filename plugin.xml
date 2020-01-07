@@ -22,6 +22,14 @@
     <source-file src="src/android/camera_activity.xml" target-dir="res/layout" />
     <source-file src="src/android/camera_theme.xml" target-dir="res/values" />
     <source-file src="src/android/camera_ids.xml" target-dir="res/values" />
+    <source-file src="src/android/libs/cameraview-2.6.0-javadoc.jar" target-dir="libs" />
+    <source-file src="src/android/libs/cameraview-2.6.0-sources.jar" target-dir="libs" />
+    <source-file src="src/android/libs/cameraview-2.6.0.aar" target-dir="libs" />
+    <source-file src="src/android/libs/cameraview-2.6.0.pom" target-dir="libs" />
+
+
+
+
 
     <preference name="ANDROID_SUPPORT_LIBRARY_VERSION" default="26+"/>
     <framework src="com.android.support:exifinterface:$ANDROID_SUPPORT_LIBRARY_VERSION" />

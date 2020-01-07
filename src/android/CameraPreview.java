@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -237,97 +238,10 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
     return true;
   }
 
-    private boolean startCamera(int x, int y, int width, int height, String defaultCamera, Boolean tapToTakePicture, Boolean dragEnabled, final Boolean toBack, String alpha, boolean tapFocus, boolean disableExifHeaderStripping, boolean storeToFile, CallbackContext callbackContext) {
+  private boolean startCamera(int x, int y, int width, int height, String defaultCamera, Boolean tapToTakePicture, Boolean dragEnabled, final Boolean toBack, String alpha, boolean tapFocus, boolean disableExifHeaderStripping, boolean storeToFile, CallbackContext callbackContext) {
     Log.d(TAG, "start camera action");
-    if (fragment != null) {
-      callbackContext.error("Camera already started");
-      return true;
-    }
-
-    final float opacity = Float.parseFloat(alpha);
-
-    fragment = new CameraActivity();
-    fragment.setEventListener(this);
-    fragment.defaultCamera = defaultCamera;
-    fragment.tapToTakePicture = tapToTakePicture;
-    fragment.dragEnabled = dragEnabled;
-    fragment.tapToFocus = tapFocus;
-    fragment.disableExifHeaderStripping = disableExifHeaderStripping;
-    fragment.storeToFile = storeToFile;
-    fragment.toBack = toBack;
-
-    DisplayMetrics metrics = cordova.getActivity().getResources().getDisplayMetrics();
-    // offset
-    int computedX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, x, metrics);
-    int computedY = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, y, metrics);
-
-    // size
-    int computedWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, width, metrics);
-    int computedHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, height, metrics);
-
-    fragment.setRect(computedX, computedY, computedWidth, computedHeight);
-
-    startCameraCallbackContext = callbackContext;
-
-    cordova.getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-
-
-        //create or update the layout params for the container view
-        FrameLayout containerView = (FrameLayout)cordova.getActivity().findViewById(containerViewId);
-        if(containerView == null){
-          containerView = new FrameLayout(cordova.getActivity().getApplicationContext());
-          containerView.setId(containerViewId);
-
-          FrameLayout.LayoutParams containerLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-          cordova.getActivity().addContentView(containerView, containerLayoutParams);
-        }
-        //display camera bellow the webview
-        if(toBack){
-
-          View view = webView.getView();
-          ViewParent rootParent = containerView.getParent();
-          ViewParent curParent = view.getParent();
-
-          view.setBackgroundColor(0x00000000);
-          // If parents do not match look for.
-          if(curParent.getParent() != rootParent) {
-            while(curParent != null && curParent.getParent() != rootParent) {
-              curParent = curParent.getParent();
-            }
-
-            if(curParent != null) {
-              ((ViewGroup)curParent).setBackgroundColor(0x00000000);
-              ((ViewGroup)curParent).bringToFront();
-            } else {
-              // Do default...
-              curParent = view.getParent();
-              webViewParent = curParent;
-              ((ViewGroup)view).bringToFront();
-            }
-          }else{
-            // Default
-            webViewParent = curParent;
-            ((ViewGroup)view).bringToFront();
-          }
-
-        }else{
-
-          //set camera back to front
-          containerView.setAlpha(opacity);
-          containerView.bringToFront();
-
-        }
-
-        //add the fragment to the container
-        FragmentManager fragmentManager = cordova.getActivity().getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(containerView.getId(), fragment);
-        fragmentTransaction.commit();
-      }
-    });
-
+    
+    Toast.makeText(this, "This is modified", Toast.LENGTH_SHORT).show();
     return true;
   }
 
