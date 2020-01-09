@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-  android:layout_width="match_parent"
+<FrameLayout android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context="con.cordovaplugincamerapreview.CameraActivity"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  tools:context="com.cordovaplugincamerapreview.CameraActivity"
   android:id="@+id/frame_container"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_gravity="center_horizontal|top"
   android:layout_weight=".7">
+
+
 
   <RelativeLayout
     android:layout_width="match_parent"
@@ -65,4 +67,13 @@
       android:indeterminateBehavior="cycle"
       android:indeterminateOnly="true"/>
   </FrameLayout>
+
+  <com.otaliastudios.cameraview.CameraView
+    android:id="@+id/camera"
+    android:keepScreenOn="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cameraAudio="off"/>
+
 </FrameLayout>
+

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.LOG;
 import org.apache.cordova.PluginResult;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -32,7 +33,7 @@ import java.util.Arrays;
 
 public class CameraPreview extends CordovaPlugin implements CameraActivity.CameraPreviewListener {
 
-  private static final String TAG = "CameraPreview";
+  private static final String TAG = "DATA";
 
   private static final String COLOR_EFFECT_ACTION = "setColorEffect";
   private static final String SUPPORTED_COLOR_EFFECTS_ACTION = "getSupportedColorEffects";
@@ -85,16 +86,17 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
   private JSONArray execArgs;
 
   private ViewParent webViewParent;
-
   private int containerViewId = 20; //<- set to random number to prevent conflict with other plugins
+
   public CameraPreview(){
     super();
     Log.d(TAG, "Constructing");
   }
 
+
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-
+    Log.d(TAG, "execute = "+action);
     if (START_CAMERA_ACTION.equals(action)) {
       if (cordova.hasPermission(permissions[0])) {
         return startCamera(args.getInt(0), args.getInt(1), args.getInt(2), args.getInt(3), args.getString(4), args.getBoolean(5), args.getBoolean(6), args.getBoolean(7), args.getString(8), args.getBoolean(9), args.getBoolean(10), args.getBoolean(11), callbackContext);
@@ -240,8 +242,95 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
 
   private boolean startCamera(int x, int y, int width, int height, String defaultCamera, Boolean tapToTakePicture, Boolean dragEnabled, final Boolean toBack, String alpha, boolean tapFocus, boolean disableExifHeaderStripping, boolean storeToFile, CallbackContext callbackContext) {
     Log.d(TAG, "start camera action");
-    
-    Toast.makeText(cordova.getActivity(), "This is modified", Toast.LENGTH_SHORT).show();
+    if (fragment != null) {
+      callbackContext.error("Camera already started");
+      return true;
+    }
+
+    final float opacity = Float.parseFloat(alpha);
+
+    fragment = new CameraActivity();
+    fragment.setEventListener(this);
+    fragment.defaultCamera = defaultCamera;
+    fragment.tapToTakePicture = tapToTakePicture;
+    fragment.dragEnabled = dragEnabled;
+    fragment.tapToFocus = tapFocus;
+    fragment.disableExifHeaderStripping = disableExifHeaderStripping;
+    fragment.storeToFile = storeToFile;
+    fragment.toBack = toBack;
+
+    DisplayMetrics metrics = cordova.getActivity().getResources().getDisplayMetrics();
+    // offset
+    int computedX = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, x, metrics);
+    int computedY = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, y, metrics);
+
+    // size
+    int computedWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, width, metrics);
+    int computedHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, height, metrics);
+
+    fragment.setRect(computedX, computedY, computedWidth, computedHeight);
+
+    startCameraCallbackContext = callbackContext;
+
+    cordova.getActivity().runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+
+
+        //create or update the layout params for the container view
+        FrameLayout containerView = (FrameLayout)cordova.getActivity().findViewById(containerViewId);
+        if(containerView == null){
+          containerView = new FrameLayout(cordova.getActivity().getApplicationContext());
+          containerView.setId(containerViewId);
+
+          FrameLayout.LayoutParams containerLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+          cordova.getActivity().addContentView(containerView, containerLayoutParams);
+        }
+        //display camera bellow the webview
+        if(toBack){
+
+          View view = webView.getView();
+          ViewParent rootParent = containerView.getParent();
+          ViewParent curParent = view.getParent();
+
+          view.setBackgroundColor(0x00000000);
+          // If parents do not match look for.
+          if(curParent.getParent() != rootParent) {
+            while(curParent != null && curParent.getParent() != rootParent) {
+              curParent = curParent.getParent();
+            }
+
+            if(curParent != null) {
+              ((ViewGroup)curParent).setBackgroundColor(0x00000000);
+              ((ViewGroup)curParent).bringToFront();
+            } else {
+              // Do default...
+              curParent = view.getParent();
+              webViewParent = curParent;
+              ((ViewGroup)view).bringToFront();
+            }
+          }else{
+            // Default
+            webViewParent = curParent;
+            ((ViewGroup)view).bringToFront();
+          }
+
+        }else{
+
+          //set camera back to front
+          containerView.setAlpha(opacity);
+          containerView.bringToFront();
+
+        }
+
+        //add the fragment to the container
+        FragmentManager fragmentManager = cordova.getActivity().getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(containerView.getId(), fragment);
+        fragmentTransaction.commit();
+      }
+    });
+
     return true;
   }
 

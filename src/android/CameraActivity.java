@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Color;
+import android.graphics.PointF;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Base64;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,25 +22,27 @@ import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.DisplayMetrics;
 import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.Surface;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.support.media.ExifInterface;
-import android.widget.Toast;
 
+import com.otaliastudios.cameraview.BitmapCallback;
+import com.otaliastudios.cameraview.CameraException;
+import com.otaliastudios.cameraview.CameraListener;
+import com.otaliastudios.cameraview.CameraOptions;
+import com.otaliastudios.cameraview.CameraView;
+import com.otaliastudios.cameraview.PictureResult;
+import com.otaliastudios.cameraview.controls.Audio;
+import com.otaliastudios.cameraview.controls.Facing;
+import com.otaliastudios.cameraview.gesture.Gesture;
+import com.otaliastudios.cameraview.gesture.GestureAction;
+import com.otaliastudios.cameraview.markers.DefaultAutoFocusMarker;
 
-import org.apache.cordova.LOG;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -66,7 +71,7 @@ public class CameraActivity extends Fragment {
   }
 
   private CameraPreviewListener eventListener;
-  private static final String TAG = "CameraActivity";
+  private static final String TAG = "DATA";
   public FrameLayout mainLayout;
   public FrameLayout frameContainerLayout;
 
@@ -95,6 +100,11 @@ public class CameraActivity extends Fragment {
   public int x;
   public int y;
 
+
+//  Shivam Pandey
+  public CameraView cameraView;
+
+
   public void setEventListener(CameraPreviewListener listener){
     eventListener = listener;
   }
@@ -106,10 +116,97 @@ public class CameraActivity extends Fragment {
     appResourcesPackage = getActivity().getPackageName();
 
     // Inflate the layout for this fragment
-    Toast.makeText(getActivity(), "onCreateView", Toast.LENGTH_SHORT).show();
+    Log.d(TAG, "onCreateView");
     view = inflater.inflate(getResources().getIdentifier("camera_activity", "layout", appResourcesPackage), container, false);
-    createCameraPreview();
+//    createCameraPreview();
+    cameraInit(); // Shivam Pandey
     return view;
+  }
+
+  private void cameraInit() {
+    cameraView = view.findViewById(getResources().getIdentifier("camera", "id", appResourcesPackage));
+//    btn_capture = view.findViewById(R.id.btn_capture);
+//    img_preview = view.findViewById(R.id.img_preview);
+
+//    btn_capture.setOnClickListener(new View.OnClickListener() {
+//      @Override
+//      public void onClick(View v) {
+//        Log.d("DATA", "Capture btn clicked");
+//        camera.takePictureSnapshot();
+//      }
+//    });
+
+    cameraView.setAudio(Audio.OFF);
+    cameraView.setUseDeviceOrientation(false);
+    cameraView.setFacing((defaultCamera == "back") ? Facing.FRONT : Facing.BACK);
+    cameraView.setZoom(0);
+    cameraView.setPictureMetering(true);
+    cameraView.setPictureSnapshotMetering(true);
+    cameraView.mapGesture(Gesture.TAP, GestureAction.AUTO_FOCUS); // Tap to focus!
+    cameraView.setAutoFocusMarker(new DefaultAutoFocusMarker());
+
+
+    cameraView.addCameraListener(new CameraListener() {
+
+      @Override
+      public void onCameraOpened(@NonNull CameraOptions options) {
+        super.onCameraOpened(options);
+        Log.d(TAG, "onCameraOpened");
+
+      }
+
+      @Override
+      public void onCameraClosed() {
+        super.onCameraClosed();
+        Log.d(TAG, "onCameraOpened");
+
+      }
+
+      @Override
+      public void onCameraError(@NonNull CameraException exception) {
+        super.onCameraError(exception);
+        Log.d(TAG, "onCameraError");
+
+      }
+
+      @Override
+      public void onPictureTaken(final PictureResult result) {
+        Log.d(TAG, "onPictureTaken");
+        Log.d(TAG, "result = "+result);
+        try {
+          result.toBitmap(width, height, new BitmapCallback() {
+            @Override
+            public void onBitmapReady(Bitmap bitmap) {
+              //Return bitmap image
+//              img_preview.setImageBitmap(bitmap);
+            }
+          });
+        } catch (UnsupportedOperationException e) {
+          // Return empty file
+//          img_preview.setImageDrawable(new ColorDrawable(Color.GREEN));
+        }
+      }
+
+      @Override
+      public void onOrientationChanged(int orientation) {
+        super.onOrientationChanged(orientation);
+//        image_orientation = orientation;
+      }
+
+      @Override
+      public void onAutoFocusStart(@NonNull PointF point) {
+        super.onAutoFocusStart(point);
+        Log.d(TAG, "onAutoFocusStart = "+point);
+
+      }
+
+      @Override
+      public void onAutoFocusEnd(boolean successful, @NonNull PointF point) {
+        super.onAutoFocusEnd(successful, point);
+        Log.d(TAG, "onAutoFocusEnd = "+point);
+      }
+
+    });
   }
 
   public void setRect(int x, int y, int width, int height){
@@ -272,60 +369,68 @@ public class CameraActivity extends Fragment {
   @Override
   public void onResume() {
     super.onResume();
+    cameraView.open();
 
-    mCamera = Camera.open(defaultCameraId);
-
-    if (cameraParameters != null) {
-      mCamera.setParameters(cameraParameters);
-    }
-
-    cameraCurrentlyLocked = defaultCameraId;
-
-    if(mPreview.mPreviewSize == null){
-      mPreview.setCamera(mCamera, cameraCurrentlyLocked);
-      eventListener.onCameraStarted();
-    } else {
-      mPreview.switchCamera(mCamera, cameraCurrentlyLocked);
-      mCamera.startPreview();
-    }
-
-    Log.d(TAG, "cameraCurrentlyLocked:" + cameraCurrentlyLocked);
-
-    final FrameLayout frameContainerLayout = (FrameLayout) view.findViewById(getResources().getIdentifier("frame_container", "id", appResourcesPackage));
-
-    ViewTreeObserver viewTreeObserver = frameContainerLayout.getViewTreeObserver();
-
-    if (viewTreeObserver.isAlive()) {
-      viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-        @Override
-        public void onGlobalLayout() {
-          frameContainerLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-          frameContainerLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-          Activity activity = getActivity();
-          if (isAdded() && activity != null) {
-            final RelativeLayout frameCamContainerLayout = (RelativeLayout) view.findViewById(getResources().getIdentifier("frame_camera_cont", "id", appResourcesPackage));
-
-            FrameLayout.LayoutParams camViewLayout = new FrameLayout.LayoutParams(frameContainerLayout.getWidth(), frameContainerLayout.getHeight());
-            camViewLayout.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
-            frameCamContainerLayout.setLayoutParams(camViewLayout);
-          }
-        }
-      });
-    }
+//    mCamera = Camera.open(defaultCameraId);
+//
+//    if (cameraParameters != null) {
+//      mCamera.setParameters(cameraParameters);
+//    }
+//
+//    cameraCurrentlyLocked = defaultCameraId;
+//
+//    if(mPreview.mPreviewSize == null){
+//      mPreview.setCamera(mCamera, cameraCurrentlyLocked);
+//      eventListener.onCameraStarted();
+//    } else {
+//      mPreview.switchCamera(mCamera, cameraCurrentlyLocked);
+//      mCamera.startPreview();
+//    }
+//
+//    Log.d(TAG, "cameraCurrentlyLocked:" + cameraCurrentlyLocked);
+//
+//    final FrameLayout frameContainerLayout = (FrameLayout) view.findViewById(getResources().getIdentifier("frame_container", "id", appResourcesPackage));
+//
+//    ViewTreeObserver viewTreeObserver = frameContainerLayout.getViewTreeObserver();
+//
+//    if (viewTreeObserver.isAlive()) {
+//      viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//        @Override
+//        public void onGlobalLayout() {
+//          frameContainerLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//          frameContainerLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+//          Activity activity = getActivity();
+//          if (isAdded() && activity != null) {
+//            final RelativeLayout frameCamContainerLayout = (RelativeLayout) view.findViewById(getResources().getIdentifier("frame_camera_cont", "id", appResourcesPackage));
+//
+//            FrameLayout.LayoutParams camViewLayout = new FrameLayout.LayoutParams(frameContainerLayout.getWidth(), frameContainerLayout.getHeight());
+//            camViewLayout.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
+//            frameCamContainerLayout.setLayoutParams(camViewLayout);
+//          }
+//        }
+//      });
+//    }
   }
 
   @Override
   public void onPause() {
     super.onPause();
+    cameraView.close();
+//
+//    // Because the Camera object is a shared resource, it's very important to release it when the activity is paused.
+//    if (mCamera != null) {
+//      setDefaultCameraId();
+//      mPreview.setCamera(null, -1);
+//      mCamera.setPreviewCallback(null);
+//      mCamera.release();
+//      mCamera = null;
+//    }
+  }
 
-    // Because the Camera object is a shared resource, it's very important to release it when the activity is paused.
-    if (mCamera != null) {
-      setDefaultCameraId();
-      mPreview.setCamera(null, -1);
-      mCamera.setPreviewCallback(null);
-      mCamera.release();
-      mCamera = null;
-    }
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    cameraView.destroy();
   }
 
   public Camera getCamera() {
