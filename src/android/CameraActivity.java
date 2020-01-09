@@ -56,6 +56,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Arrays;
 import java.util.UUID;
+import android.support.annotation.NonNull;
 
 public class CameraActivity extends Fragment {
 
