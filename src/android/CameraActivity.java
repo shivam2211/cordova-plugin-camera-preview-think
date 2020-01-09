@@ -127,18 +127,9 @@ public class CameraActivity extends Fragment {
 
   //  Modified by Shivam Pandey
   private void cameraInit() {
+
+    Log.d(TAG, "cameraInit");
     cameraView = view.findViewById(getResources().getIdentifier("camera", "id", appResourcesPackage));
-//    btn_capture = view.findViewById(R.id.btn_capture);
-//    img_preview = view.findViewById(R.id.img_preview);
-
-//    btn_capture.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View v) {
-//        Log.d("DATA", "Capture btn clicked");
-//        camera.takePictureSnapshot();
-//      }
-//    });
-
     cameraView.setAudio(Audio.OFF);
     cameraView.setUseDeviceOrientation(false);
     cameraView.setFacing((defaultCamera == "back") ? Facing.FRONT : Facing.BACK);
@@ -298,6 +289,7 @@ public class CameraActivity extends Fragment {
   @Override
   public void onResume() {
     super.onResume();
+    Log.d(TAG, "onResume - cameraView = "+cameraView.isOpened());
     cameraView.open();
 
 //    mCamera = Camera.open(defaultCameraId);
