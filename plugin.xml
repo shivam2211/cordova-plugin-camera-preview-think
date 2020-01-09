@@ -33,6 +33,7 @@
 
     <preference name="ANDROID_SUPPORT_LIBRARY_VERSION" default="26+"/>
     <framework src="com.android.support:exifinterface:$ANDROID_SUPPORT_LIBRARY_VERSION" />
+    <framework src="com.otaliastudios:cameraview:2.6.0" />
 
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="CameraPreview">
