@@ -278,6 +278,8 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
       public void run() {
 
 
+        Log.d(TAG,"toBack = "+toBack);
+
         //create or update the layout params for the container view
         FrameLayout containerView = (FrameLayout)cordova.getActivity().findViewById(containerViewId);
         if(containerView == null){
@@ -288,7 +290,7 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
           cordova.getActivity().addContentView(containerView, containerLayoutParams);
         }
         //display camera bellow the webview
-        if(toBack){
+        if(true){
 
           View view = webView.getView();
           ViewParent rootParent = containerView.getParent();
@@ -376,7 +378,7 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
     if(this.hasView(callbackContext) == false){
       return true;
     }
-
+    Log.d("DATA","takePicture");
     takePictureCallbackContext = callbackContext;
 
     fragment.takePicture(width, height, quality);

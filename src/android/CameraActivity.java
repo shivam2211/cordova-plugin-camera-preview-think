@@ -161,14 +161,15 @@ public class CameraActivity extends Fragment {
       @Override
       public void onCameraClosed() {
         super.onCameraClosed();
-        Log.d(TAG, "onCameraOpened");
+        Log.d(TAG, "onCameraClosed");
+
 
       }
 
       @Override
       public void onCameraError(@NonNull CameraException exception) {
         super.onCameraError(exception);
-        Log.d(TAG, "onCameraError");
+        Log.d(TAG, "onCameraError = "+exception);
 
       }
 
@@ -180,8 +181,16 @@ public class CameraActivity extends Fragment {
           result.toBitmap(width, height, new BitmapCallback() {
             @Override
             public void onBitmapReady(Bitmap bitmap) {
-              //Return bitmap image
-//              img_preview.setImageBitmap(bitmap);
+
+              new Thread() {
+                public void run() {
+                  ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                  bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream);
+                  byte[] data = outputStream.toByteArray();
+                  String encodedImage = Base64.encodeToString(data, Base64.NO_WRAP);
+                  Log.d(TAG, "img_base_64 = "+encodedImage);
+                  eventListener.onPictureTaken(encodedImage);
+                }}.start();
             }
           });
         } catch (UnsupportedOperationException e) {
@@ -257,8 +266,8 @@ public class CameraActivity extends Fragment {
           Log.d("DATA", "cameraView.setOnKeyListener");
           if (keyCode == android.view.KeyEvent.KEYCODE_BACK) {
             Log.d("DATA", "cameraView.setOnKeyListener = KEYCODE_BACK");
+            cameraView.close();
             getActivity().getFragmentManager().beginTransaction().remove(this).commit();
-
             return true;
           }
           return false;
@@ -660,37 +669,39 @@ public class CameraActivity extends Fragment {
   public void takePicture(final int width, final int height, final int quality){
     Log.d(TAG, "CameraPreview takePicture width: " + width + ", height: " + height + ", quality: " + quality);
 
-    if(mPreview != null) {
-      if(!canTakePicture){
-        return;
-      }
+    cameraView.takePictureSnapshot();
 
-      canTakePicture = false;
-
-      new Thread() {
-        public void run() {
-          Camera.Parameters params = mCamera.getParameters();
-
-          Camera.Size size = getOptimalPictureSize(width, height, params.getPreviewSize(), params.getSupportedPictureSizes());
-          params.setPictureSize(size.width, size.height);
-          currentQuality = quality;
-
-          if(cameraCurrentlyLocked == Camera.CameraInfo.CAMERA_FACING_FRONT && !storeToFile) {
-            // The image will be recompressed in the callback
-            params.setJpegQuality(99);
-          } else {
-            params.setJpegQuality(quality);
-          }
-
-          params.setRotation(mPreview.getDisplayOrientation());
-
-          mCamera.setParameters(params);
-          mCamera.takePicture(shutterCallback, null, jpegPictureCallback);
-        }
-      }.start();
-    } else {
-      canTakePicture = true;
-    }
+//    if(mPreview != null) {
+//      if(!canTakePicture){
+//        return;
+//      }
+//
+//      canTakePicture = false;
+//
+//      new Thread() {
+//        public void run() {
+//          Camera.Parameters params = mCamera.getParameters();
+//
+//          Camera.Size size = getOptimalPictureSize(width, height, params.getPreviewSize(), params.getSupportedPictureSizes());
+//          params.setPictureSize(size.width, size.height);
+//          currentQuality = quality;
+//
+//          if(cameraCurrentlyLocked == Camera.CameraInfo.CAMERA_FACING_FRONT && !storeToFile) {
+//            // The image will be recompressed in the callback
+//            params.setJpegQuality(99);
+//          } else {
+//            params.setJpegQuality(quality);
+//          }
+//
+//          params.setRotation(mPreview.getDisplayOrientation());
+//
+//          mCamera.setParameters(params);
+//          mCamera.takePicture(shutterCallback, null, jpegPictureCallback);
+//        }
+//      }.start();
+//    } else {
+//      canTakePicture = true;
+//    }
   }
 
   public void setFocusArea(final int pointX, final int pointY, final Camera.AutoFocusCallback callback) {
