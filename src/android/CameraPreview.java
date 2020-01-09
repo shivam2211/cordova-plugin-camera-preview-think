@@ -242,10 +242,11 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
 
   private boolean startCamera(int x, int y, int width, int height, String defaultCamera, Boolean tapToTakePicture, Boolean dragEnabled, final Boolean toBack, String alpha, boolean tapFocus, boolean disableExifHeaderStripping, boolean storeToFile, CallbackContext callbackContext) {
     Log.d(TAG, "start camera action");
-    if (fragment != null) {
-      callbackContext.error("Camera already started");
-      return true;
-    }
+//    if (fragment != null) {
+//      Log.d(TAG,"Camera already started");
+//      callbackContext.error("Camera already started");
+//      return true;
+//    }
 
     final float opacity = Float.parseFloat(alpha);
 
