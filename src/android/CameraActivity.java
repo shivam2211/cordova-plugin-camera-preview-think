@@ -55,6 +55,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 import android.support.annotation.NonNull;
 
@@ -132,7 +133,9 @@ public class CameraActivity extends Fragment {
     cameraView = view.findViewById(getResources().getIdentifier("camera", "id", appResourcesPackage));
     cameraView.setAudio(Audio.OFF);
     cameraView.setUseDeviceOrientation(false);
-    cameraView.setFacing((defaultCamera == "back") ? Facing.FRONT : Facing.BACK);
+
+    Log.d(TAG, "defaultCamera = "+defaultCamera);
+    cameraView.setFacing((Objects.equals(defaultCamera, "back")) ? Facing.BACK : Facing.FRONT);
     cameraView.setZoom(0);
     cameraView.setPictureMetering(true);
     cameraView.setPictureSnapshotMetering(true);
