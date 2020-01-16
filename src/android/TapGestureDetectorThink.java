@@ -3,7 +3,7 @@ package com.cordovaplugincamerapreview;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-class TapGestureDetector extends GestureDetector.SimpleOnGestureListener{
+class TapGestureDetectorThink extends GestureDetector.SimpleOnGestureListener{
   private final String TAG = "TapGestureDetector";
 
   @Override

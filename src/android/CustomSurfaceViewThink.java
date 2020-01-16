@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback{
-  private final String TAG = "CustomSurfaceView";
+class CustomSurfaceViewThink extends SurfaceView implements SurfaceHolder.Callback{
+  private final String TAG = "CustomSurfaceViewThink";
 
-  CustomSurfaceView(Context context){
+  CustomSurfaceViewThink(Context context){
     super(context);
   }
 

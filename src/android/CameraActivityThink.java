@@ -77,7 +77,7 @@ public class CameraActivityThink extends Fragment {
   public FrameLayout mainLayout;
   public FrameLayout frameContainerLayout;
 
-  private Preview mPreview;
+  private PreviewThink mPreview;
   private boolean canTakePicture = true;
 
   private View view;
@@ -236,7 +236,7 @@ public class CameraActivityThink extends Fragment {
       frameContainerLayout.setLayoutParams(layoutParams);
 
       //video view
-      mPreview = new Preview(getActivity());
+      mPreview = new PreviewThink(getActivity());
       mainLayout = (FrameLayout) view.findViewById(getResources().getIdentifier("video_view", "id", appResourcesPackage));
       mainLayout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
       mainLayout.addView(mPreview);

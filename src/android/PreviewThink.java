@@ -18,10 +18,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-class Preview extends RelativeLayout implements SurfaceHolder.Callback {
+class PreviewThink extends RelativeLayout implements SurfaceHolder.Callback {
   private final String TAG = "Preview";
 
-  CustomSurfaceView mSurfaceView;
+  CustomSurfaceViewThink mSurfaceView;
   SurfaceHolder mHolder;
   Camera.Size mPreviewSize;
   List<Camera.Size> mSupportedPreviewSizes;
@@ -32,10 +32,10 @@ class Preview extends RelativeLayout implements SurfaceHolder.Callback {
   int viewWidth;
   int viewHeight;
 
-  Preview(Context context) {
+  PreviewThink(Context context) {
     super(context);
 
-    mSurfaceView = new CustomSurfaceView(context);
+    mSurfaceView = new CustomSurfaceViewThink(context);
     addView(mSurfaceView);
 
     requestLayout();
