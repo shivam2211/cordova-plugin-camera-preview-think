@@ -8,13 +8,13 @@
   <license>Apache 2.0</license>
   <keywords>cordova,phonegap,ecosystem:cordova,cordova-android,cordova-ios,android,ios,ionic,camera,cam,camera-preview,preview</keywords>
 
-  <js-module src="www/CameraPreview.js" name="CameraPreview">
-    <clobbers target="CameraPreview" />
+  <js-module src="www/CameraPreviewThink.js" name="CameraPreviewThink">
+    <clobbers target="CameraPreviewThink" />
   </js-module>
 
   <platform name="android">
-    <source-file src="src/android/CameraPreview.java" target-dir="src/com/cordovaplugincamerapreview" />
-    <source-file src="src/android/CameraActivity.java" target-dir="src/com/cordovaplugincamerapreview" />
+    <source-file src="src/android/CameraPreviewThink.java" target-dir="src/com/cordovaplugincamerapreview" />
+    <source-file src="src/android/CameraActivityThink.java" target-dir="src/com/cordovaplugincamerapreview" />
     <source-file src="src/android/CustomSurfaceView.java" target-dir="src/com/cordovaplugincamerapreview" />
     <source-file src="src/android/Preview.java" target-dir="src/com/cordovaplugincamerapreview" />
     <source-file src="src/android/TapGestureDetector.java" target-dir="src/com/cordovaplugincamerapreview" />
@@ -35,8 +35,8 @@
     <framework src="com.otaliastudios:cameraview:2.6.0" />
 
     <config-file target="res/xml/config.xml" parent="/*">
-      <feature name="CameraPreview">
-        <param name="android-package" value="com.cordovaplugincamerapreview.CameraPreview" />
+      <feature name="CameraPreviewThink">
+        <param name="android-package" value="com.cordovaplugincamerapreview.CameraPreviewThink" />
         <param name="onload" value="true" />
       </feature>
     </config-file>
@@ -48,19 +48,19 @@
     </config-file>
 
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
-      <activity android:name="com.cordovaplugincamerapreview.CameraActivity" android:screenOrientation="portrait" android:theme="@style/CameraPreviewTheme" />
+      <activity android:name="com.cordovaplugincamerapreview.CameraActivityThink" android:screenOrientation="portrait" android:theme="@style/CameraPreviewTheme" />
     </config-file>
   </platform>
 
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
-      <feature name="CameraPreview">
-        <param name="ios-package" value="CameraPreview" onload="true" />
+      <feature name="CameraPreviewThink">
+        <param name="ios-package" value="CameraPreviewThink" onload="true" />
       </feature>
     </config-file>
 
-    <header-file src="src/ios/CameraPreview.h" />
-    <source-file src="src/ios/CameraPreview.m" />
+    <header-file src="src/ios/CameraPreviewThink.h" />
+    <source-file src="src/ios/CameraPreviewThink.m" />
 
      <header-file src="src/ios/TemperatureAndTint.h" />
     <source-file src="src/ios/TemperatureAndTint.m" />
