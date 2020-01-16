@@ -18,9 +18,9 @@
     <source-file src="src/android/CustomSurfaceViewThink.java" target-dir="src/com/cordovaplugincamerapreviewthink" />
     <source-file src="src/android/PreviewThink.java" target-dir="src/com/cordovaplugincamerapreviewthink" />
     <source-file src="src/android/TapGestureDetectorThink.java" target-dir="src/com/cordovaplugincamerapreviewthink" />
-    <source-file src="src/android/camera_activity.xml" target-dir="res/layout" />
-    <source-file src="src/android/camera_theme.xml" target-dir="res/values" />
-    <source-file src="src/android/camera_ids.xml" target-dir="res/values" />
+    <source-file src="src/android/camera_activity_think.xml" target-dir="res/layout" />
+    <source-file src="src/android/camera_theme_think.xml" target-dir="res/values" />
+    <source-file src="src/android/camera_ids_think.xml" target-dir="res/values" />
     <source-file src="src/android/libs/cameraview-2.6.0-javadoc.jar" target-dir="libs" />
     <source-file src="src/android/libs/cameraview-2.6.0-sources.jar" target-dir="libs" />
     <source-file src="src/android/libs/cameraview-2.6.0.aar" target-dir="libs" />

@@ -120,7 +120,7 @@ public class CameraActivityThink extends Fragment {
 
     // Inflate the layout for this fragment
     Log.d(TAG, "onCreateView");
-    view = inflater.inflate(getResources().getIdentifier("camera_activity", "layout", appResourcesPackage), container, false);
+    view = inflater.inflate(getResources().getIdentifier("camera_activity_think", "layout", appResourcesPackage), container, false);
 //    createCameraPreview();
     cameraInit(); // Shivam Pandey
     return view;
