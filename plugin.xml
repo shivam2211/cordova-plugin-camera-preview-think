@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<<<<<<< HEAD
 <plugin id="cordova-plugin-camera-preview-think" version="0.11.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
 
   <!-- Shivam Pandey -->
+=======
+<plugin id="cordova-plugin-camera-preview" version="0.11.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+  
+  <!-- Shivam pandey -->
+>>>>>>> f1606207d5463b99ccd1b8e8b6af4ced0f9687e6
   <name>cordova-plugin-camera-preview-think</name>
   <description>Cordova plugin that allows camera interaction from HTML code. Show camera preview popup on top of the HTML.</description>
   <license>Apache 2.0</license>
