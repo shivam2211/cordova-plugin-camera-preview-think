@@ -59,7 +59,7 @@ import java.util.Objects;
 import java.util.UUID;
 import android.support.annotation.NonNull;
 
-public class CameraActivity extends Fragment {
+public class CameraActivityThink extends Fragment {
 
   public interface CameraPreviewListener {
     void onPictureTaken(String originalPicture);
@@ -461,7 +461,7 @@ public class CameraActivity extends Fragment {
 
   PictureCallback jpegPictureCallback = new PictureCallback(){
     public void onPictureTaken(byte[] data, Camera arg1){
-      Log.d(TAG, "CameraPreview jpegPictureCallback");
+      Log.d(TAG, "CameraPreviewThink jpegPictureCallback");
 
       try {
         if (!disableExifHeaderStripping) {
@@ -500,17 +500,17 @@ public class CameraActivity extends Fragment {
           out.close();
           eventListener.onPictureTaken(path);
         }
-        Log.d(TAG, "CameraPreview pictureTakenHandler called back");
+        Log.d(TAG, "CameraPreviewThink pictureTakenHandler called back");
       } catch (OutOfMemoryError e) {
         // most likely failed to allocate memory for rotateBitmap
-        Log.d(TAG, "CameraPreview OutOfMemoryError");
+        Log.d(TAG, "CameraPreviewThink OutOfMemoryError");
         // failed to allocate memory
         eventListener.onPictureTakenError("Picture too large (memory)");
       } catch (IOException e) {
-        Log.d(TAG, "CameraPreview IOException");
+        Log.d(TAG, "CameraPreviewThink IOException");
         eventListener.onPictureTakenError("IO Error when extracting exif");
       } catch (Exception e) {
-        Log.d(TAG, "CameraPreview onPictureTaken general exception");
+        Log.d(TAG, "CameraPreviewThink onPictureTaken general exception");
       } finally {
         canTakePicture = true;
         mCamera.startPreview();
@@ -544,7 +544,7 @@ public class CameraActivity extends Fragment {
       previewAspectRatio = 1.0 / previewAspectRatio;
     }
 
-    Log.d(TAG, "CameraPreview previewAspectRatio " + previewAspectRatio);
+    Log.d(TAG, "CameraPreviewThink previewAspectRatio " + previewAspectRatio);
 
     double aspectTolerance = 0.1;
     double bestDifference = Double.MAX_VALUE;
@@ -554,7 +554,7 @@ public class CameraActivity extends Fragment {
 
       // Perfect match
       if (supportedSize.equals(requestedSize)) {
-        Log.d(TAG, "CameraPreview optimalPictureSize " + supportedSize.width + 'x' + supportedSize.height);
+        Log.d(TAG, "CameraPreviewThink optimalPictureSize " + supportedSize.width + 'x' + supportedSize.height);
         return supportedSize;
       }
 
@@ -584,7 +584,7 @@ public class CameraActivity extends Fragment {
         }
       }
     }
-    Log.d(TAG, "CameraPreview optimalPictureSize " + size.width + 'x' + size.height);
+    Log.d(TAG, "CameraPreviewThink optimalPictureSize " + size.width + 'x' + size.height);
     return size;
   }
   static byte[] rotateNV21(final byte[] yuv,
@@ -651,7 +651,7 @@ public class CameraActivity extends Fragment {
           byteArrayOutputStream.close();
           eventListener.onSnapshotTaken(Base64.encodeToString(data, Base64.NO_WRAP));
         } catch (IOException e) {
-          Log.d(TAG, "CameraPreview IOException");
+          Log.d(TAG, "CameraPreviewThink IOException");
           eventListener.onSnapshotTakenError("IO Error");
         } finally {
 
@@ -662,7 +662,7 @@ public class CameraActivity extends Fragment {
   }
 
   public void takePicture(final int width, final int height, final int quality){
-    Log.d(TAG, "CameraPreview takePicture width: " + width + ", height: " + height + ", quality: " + quality);
+    Log.d(TAG, "CameraPreviewThink takePicture width: " + width + ", height: " + height + ", quality: " + quality);
 
     cameraView.takePictureSnapshot();
 

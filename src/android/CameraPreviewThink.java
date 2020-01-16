@@ -31,7 +31,7 @@ import org.json.JSONException;
 import java.util.List;
 import java.util.Arrays;
 
-public class CameraPreview extends CordovaPlugin implements CameraActivity.CameraPreviewListener {
+public class CameraPreviewThink extends CordovaPlugin implements CameraActivityThink.CameraPreviewListener {
 
   private static final String TAG = "DATA";
 
@@ -75,7 +75,7 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
     Manifest.permission.CAMERA
   };
 
-  private CameraActivity fragment;
+  private CameraActivityThink fragment;
   private CallbackContext takePictureCallbackContext;
   private CallbackContext takeSnapshotCallbackContext;
   private CallbackContext setFocusCallbackContext;
@@ -88,7 +88,7 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
   private ViewParent webViewParent;
   private int containerViewId = 20; //<- set to random number to prevent conflict with other plugins
 
-  public CameraPreview(){
+  public CameraPreviewThink(){
     super();
     Log.d(TAG, "Constructing");
   }
@@ -250,7 +250,7 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
 
     final float opacity = Float.parseFloat(alpha);
 
-    fragment = new CameraActivity();
+    fragment = new CameraActivityThink();
     fragment.setEventListener(this);
     fragment.defaultCamera = defaultCamera;
     fragment.tapToTakePicture = tapToTakePicture;
@@ -369,7 +369,7 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
   }
 
   public void onSnapshotTakenError(String message) {
-    Log.d(TAG, "CameraPreview onSnapshotTakenError");
+    Log.d(TAG, "CameraPreviewThink onSnapshotTakenError");
     takeSnapshotCallbackContext.error(message);
     takeSnapshotCallbackContext = null;
   }
@@ -398,7 +398,7 @@ public class CameraPreview extends CordovaPlugin implements CameraActivity.Camer
   }
 
   public void onPictureTakenError(String message) {
-    Log.d(TAG, "CameraPreview onPictureTakenError");
+    Log.d(TAG, "CameraPreviewThink onPictureTakenError");
     takePictureCallbackContext.error(message);
   }
 
@@ -962,7 +962,7 @@ private boolean getSupportedFocusModes(CallbackContext callbackContext) {
   }
 
   public void onFocusSetError(String message) {
-    Log.d(TAG, "CameraPreview onFocusSetError");
+    Log.d(TAG, "CameraPreviewThink onFocusSetError");
     setFocusCallbackContext.error(message);
   }
 
